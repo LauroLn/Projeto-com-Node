@@ -5,6 +5,8 @@ const app = express()
 const db = require('./db/connection')
 const bodyParser = require('body-parser')
 const Job = require('./models/Job')
+const Sequelize = require('sequelize')
+const Op = Sequelize.Op
 
 // porta padrao
 const PORT = 4000
@@ -39,13 +41,32 @@ app.listen(PORT, function(){
 // rota inicial
 app.get('/', (req,res)=>{
 
-    Job.findAll({order:[  //ordena em ordem decrescente
-        ['createdAt', 'desc']
-    ]}).then(jobs =>{          //retorna uma promessa, dentro se a promessa for true ele renderiza a tela
-        res.render("index", {
-            jobs
-        })
-    })
+    let search = req.query.job  // quesição get nao vem req.body, e sim .query
+    let query = "%"+search+"%" // ph = > php 
+
+    if(!search){
+     
+        Job.findAll({order:[  //ordena em ordem decrescente
+            ['createdAt', 'desc']
+        ]}).then(jobs =>{          //retorna uma promessa, dentro se a promessa for true ele renderiza a tela
+            res.render("index", {
+                jobs
+            })
+        }).catch(err => console.log(err))
+
+    }else{
+        Job.findAll({
+            where: {title: {[Op.like]: query}},
+            order:[  //ordena em ordem decrescente
+            ['createdAt', 'desc']
+        ]}).then(jobs =>{          //retorna uma promessa, dentro se a promessa for true ele renderiza a tela
+            res.render("index", {
+                jobs, search 
+            })
+        }).catch(err => console.log(err))
+    }
+
+
    
 })
 

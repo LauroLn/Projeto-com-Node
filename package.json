@@ -1,7 +1,6 @@
 {
   "name": "projeto",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js"
@@ -15,5 +14,6 @@
     "nodemon": "^3.1.4",
     "sequelize": "^6.37.3",
     "sqlite3": "^5.1.7"
-  }
+  },
+  "description": ""
 }
